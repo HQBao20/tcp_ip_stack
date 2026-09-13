@@ -69,3 +69,29 @@ typedef struct graph_ {
     char topology_name[32];
     glthread_t node_list;
 } graph_t;
+
+/*Helper functions*/
+static inline node_t *
+get_nbr_node(interface_t *interface){
+
+    assert(interface->att_node);
+    assert(interface->link);
+    
+    link_t *link = interface->link;
+    if(&link->intf1 == interface)
+        return link->intf2.att_node;
+    else
+        return link->intf1.att_node;
+}
+
+static inline int
+get_node_intf_available_slot(node_t *node){
+
+    int i ;
+    for( i = 0 ; i < MAX_INTF_PER_NODE; i++){
+        if(node->intf[i])
+            continue;
+        return i;
+    }
+    return -1;
+}
