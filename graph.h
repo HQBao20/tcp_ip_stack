@@ -89,6 +89,10 @@ insert_link_between_two_nodes(node_t *node1,
                              unsigned int cost);
 
 /*Helper functions*/
+
+/*
+ * Get neighbor node
+ */
 static inline node_t *
 get_nbr_node(interface_t *interface){
 
@@ -102,6 +106,9 @@ get_nbr_node(interface_t *interface){
         return link->intf1.att_node;
 }
 
+/*
+ * Get interface available slot
+ */
 static inline int
 get_node_intf_available_slot(node_t *node){
 
@@ -112,6 +119,43 @@ get_node_intf_available_slot(node_t *node){
         return i;
     }
     return -1;
+}
+
+/*
+ * Get interface by interface name
+ */
+static inline interface_t *
+get_node_if_by_name(node_t *node, char *if_name){
+
+    int i ;
+    interface_t *intf;
+
+    for( i = 0 ; i < MAX_INTF_PER_NODE; i++){
+        intf = node->intf[i];
+        if(!intf) return NULL;
+        if(strncmp(intf->if_name, if_name, IF_NAME_SIZE) == 0){
+            return intf;
+        }
+    }
+    return NULL;
+}
+
+/*
+ * Get node by node name
+ */
+static inline node_t *
+get_node_by_node_name(graph_t *topo, char *node_name){
+
+    node_t *node;
+    glthread_t *curr;    
+
+    ITERATE_GLTHREAD_BEGIN(&topo->node_list, curr){
+
+        node = graph_glue_to_node(curr);
+        if(strncmp(node->node_name, node_name, strlen(node_name)) == 0)
+            return node;
+    } ITERATE_GLTHREAD_END(&topo->node_list, curr);
+    return NULL;
 }
 
 /*Display Routines*/
