@@ -34,6 +34,10 @@
  * www.csepracticals.com
  */
 
+#ifndef __GRAPH__
+#define __GRAPH__
+
+#include <assert.h>
 #include "gluethread/glthread.h"
 
 #define NODE_NAME_SIZE   16
@@ -55,14 +59,15 @@ struct link_ {
     interface_t intf1;
     interface_t intf2;
     unsigned int cost;
-}
+};
 
 struct node_ {
 
     char node_name[NODE_NAME_SIZE];
-    interface_t interfaces[MAX_INTF_PER_NODE];
-    glthread_t node_glue;
+    interface_t *intf[MAX_INTF_PER_NODE];
+    glthread_t graph_glue;
 };
+GLTHREAD_TO_STRUCT(graph_glue_to_node, node_t, graph_glue);
 
 typedef struct graph_ {
 
@@ -108,3 +113,10 @@ get_node_intf_available_slot(node_t *node){
     }
     return -1;
 }
+
+/*Display Routines*/
+void dump_graph(graph_t *graph);
+void dump_node(node_t *node);
+void dump_interface(interface_t *interface);
+
+#endif
