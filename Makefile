@@ -1,12 +1,13 @@
 CC=gcc
 CFLAGS=-g
-LIBS=-lpthread -L ./CommandParser -lcli
+LIBS=-lpthread -L ./CommandParser -lcli -lrt
 TARGET:test.exe
 
 OBJS=gluethread/glthread.o \
 		  graph.o 		   \
 		  topologies.o \
-		  net.o
+		  net.o \
+		  nwcli.o
 
 test.exe:testapp.o ${OBJS} CommandParser/libcli.a
 	${CC} ${CFLAGS} testapp.o ${OBJS} -o test.exe ${LIBS}
@@ -22,6 +23,8 @@ topologies.o:topologies.c
 	${CC} ${CFLAGS} -c -I . topologies.c -o topologies.o
 net.o:net.c
 	${CC} ${CFLAGS} -c -I . net.c -o net.o
+nwcli.o:nwcli.c
+	${CC} ${CFLAGS} -c -I . nwcli.c  -o nwcli.o
 CommandParser/libcli.a:
 	(cd CommandParser; make)
 all:

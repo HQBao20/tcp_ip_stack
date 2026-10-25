@@ -34,14 +34,22 @@
  * https://csepracticals.wixsite.com/csepracticals
  * if above URL dont work, then try visit : https://csepracticals.com*/
 
+#include "CommandParser/libcli.h"
 #include "graph.h"
 
+/* KHAI BÁO TOÀN CỤC: Biến topo phải là global để network_cli.c có thể 'extern' */
 extern graph_t *build_first_topo();
+extern void network_init_cli();
+
+graph_t *topo = NULL;
 
 int 
 main(int argc, char **argv){
 
-    graph_t *topo = build_first_topo();
-    dump_nw_graph(topo);
+    network_init_cli();
+    
+    topo = build_first_topo();
+
+    start_shell(); 
     return 0;
 }
