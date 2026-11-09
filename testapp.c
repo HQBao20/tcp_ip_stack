@@ -36,6 +36,9 @@
 
 #include "CommandParser/libcli.h"
 #include "graph.h"
+#include "comm.h"
+#include <string.h>
+#include <unistd.h>
 
 /* KHAI BÁO TOÀN CỤC: Biến topo phải là global để network_cli.c có thể 'extern' */
 extern graph_t *build_first_topo();
@@ -50,6 +53,19 @@ main(int argc, char **argv){
     
     topo = build_first_topo();
 
-    start_shell(); 
+    /* Cho luồng receiver thread có thời gian khởi động */
+    sleep(2);
+
+    /* 1. Lấy con trỏ của nút R0 (Nút gửi). Topology hiện tại đặt tên là "R0_re" */
+    node_t *snode = get_node_by_node_name(topo, "R0_re");
+
+    /* 2. Lấy con trỏ của cổng eth0/0 thuộc nút R0 (Cổng gửi) */
+    interface_t *oif = get_node_if_by_name(snode, "eth0/0");
+
+    /* 3. Tạo dữ liệu giả và gọi API gửi gói tin */
+    char msg[] = "Hello, how are you?";
+    send_pkt_out(msg, strlen(msg), oif);
+
+    start_shell();
     return 0;
 }
